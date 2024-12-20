@@ -1,0 +1,50 @@
+{
+  "Comment": "Financial Report Analysis Pipeline",
+  "StartAt": "ExtractText",
+  "States": {
+    "ExtractText": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "arn:aws:iam::387311887840:role/financial-analysis-lambda-role",
+        "Payload": {
+          "jobId.$": "$.jobId"
+        }
+      },
+      "Next": "AnalyzeEntities"
+    },
+    "AnalyzeEntities": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::comprehend:detectEntities",
+      "Parameters": {
+        "Text.$": "$.text",
+        "LanguageCode": "en"
+      },
+      "Next": "SageMakerInference"
+    },
+    "SageMakerInference": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::sagemaker:invoke-endpoint",
+      "Parameters": {
+        "EndpointName": "financial-analysis-endpoint",
+        "ContentType": "application/json",
+        "Accept": "application/json",
+        "Body.$": "$.text"
+      },
+      "Next": "StoreResults"
+    },
+    "StoreResults": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::dynamodb:putItem",
+      "End": true,
+      "Parameters": {
+        "TableName": "FinancialAnalysisResults",
+        "Item": {
+          "jobId": {"S.$": "$.jobId"},
+          "results": {"S.$": "$.results"},
+          "timestamp": {"S.$": "$$.State.EnteredTime"}
+        }
+      }
+    }
+  }
+}
