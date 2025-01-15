@@ -3,19 +3,19 @@
 # AWS Configuration
 AWS_CONFIG = {
     'region': 'us-east-1',  # Change to your region
-    'account_id': '387311887840',  # Replace with your AWS account ID
+    'account_id': '**********',  # Replace with your AWS account ID
     'bucket_names': {
         'raw': 'financial-reports-raw-{account_id}',
         'processed': 'financial-reports-processed-{account_id}',
         'models': 'financial-models-{account_id}'
     },
-    'lambda_role_arn': 'arn:aws:iam::387311887840:role/financial-analysis-lambda-role',
-    'step_functions_role_arn': 'arn:aws:iam::387311887840:role/financial-analysis-step-functions-role'
+    'lambda_role_arn': 'arn:aws:iam::**********:role/financial-analysis-lambda-role',
+    'step_functions_role_arn': 'arn:aws:iam::**********:role/financial-analysis-step-functions-role'
 }
 
 # API Keys
 API_KEYS = {
-    'news_api': '93a0eaf13a844ef4b17dc8cb09e77e0e'  # Replace with your News API key
+    'news_api': '**********'  # Replace with your News API key
 }
 
 # Model Configuration
